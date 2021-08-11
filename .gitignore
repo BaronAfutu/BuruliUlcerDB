@@ -40,6 +40,12 @@ build/Release
 # Dependency directories
 node_modules/
 jspm_packages/
+BURULI ULCER DATABASE/
+db/
+BURULI ULCER DATABASE.zip
+run.bat
+tasks.txt
+test.sql
 
 # TypeScript v1 declaration files
 typings/
