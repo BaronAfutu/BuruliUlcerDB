@@ -1,6 +1,6 @@
 {
-    "host"     : "localhost",
-    "user"     : "root",
-    "password" : "",
-    "database" : "buruli_ulcer_db"
+    "host"     : "sql6.freemysqlhosting.net",
+    "user"     : "sql6430358",
+    "password" : "F7fzUwlMDu",
+    "database" : "sql6430358"
 }
