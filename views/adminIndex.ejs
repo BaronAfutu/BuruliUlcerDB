@@ -40,20 +40,21 @@
           </div>
           <div class="u-custom-menu u-nav-container">
             <ul class="u-nav u-unstyled u-nav-1"><li class="u-nav-item"><a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="/" style="padding: 10px 20px;">Home</a>
-</li><li class="u-nav-item"><a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="/#browse" style="padding: 10px 20px;">Browse</a>
-</li><li class="u-nav-item"><a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="/#aboutus" style="padding: 10px 20px;">Contact</a>
-</li><li class="u-nav-item"><a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="/users" style="padding: 10px 20px;">Admin</a>
+</li><li class="u-nav-item"><a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="#" style="padding: 10px 20px;"><%= username %></a>
+</li><!--li class="u-nav-item"><a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="/users/addadmin" style="padding: 10px 20px;">Add Admin</a>
+</li--><li class="u-nav-item"><a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="/users/logout" style="padding: 10px 20px;">Logout</a>
 </li></ul>
           </div>
           <div class="u-custom-menu u-nav-container-collapse">
             <div class="u-black u-container-style u-inner-container-layout u-opacity u-opacity-95 u-sidenav">
               <div class="u-sidenav-overflow">
                 <div class="u-menu-close"></div>
-                <ul class="u-align-center u-nav u-popupmenu-items u-unstyled u-nav-2"><li class="u-nav-item"><a class="u-button-style u-nav-link" href="/" style="padding: 10px 20px;">Home</a>
-</li><li class="u-nav-item"><a class="u-button-style u-nav-link" href="/#browse" style="padding: 10px 20px;">Browse</a>
-</li><li class="u-nav-item"><a class="u-button-style u-nav-link" href="/#aboutus" style="padding: 10px 20px;">Contact</a>
-</li><li class="u-nav-item"><a class="u-button-style u-nav-link" href="/users" style="padding: 10px 20px;">Admin</a>
-</li></ul>
+                <ul class="u-align-center u-nav u-popupmenu-items u-unstyled u-nav-2">
+                  <li class="u-nav-item"><a class="u-button-style u-nav-link" href="/" style="padding: 10px 20px;">Home</a>
+                  </li><li class="u-nav-item"><a class="u-button-style u-nav-link" href="#" style="padding: 10px 20px;"><%= username %></a>
+                  </li><!--li class="u-nav-item"><a class="u-button-style u-nav-link" href="/users/addadmin" style="padding: 10px 20px;">Add Admin</a>
+                  </li--><li class="u-nav-item"><a class="u-button-style u-nav-link" href="/users/logout" style="padding: 10px 20px;">Logout</a>
+                  </li></ul>
               </div>
             </div>
             <div class="u-black u-menu-overlay u-opacity u-opacity-70"></div>
@@ -67,6 +68,52 @@
       <div class="u-clearfix u-sheet u-sheet-1">
         
         <!--CONTENT COMES HERE-->
+        <% sub = {
+          drug_target : 'DRUG TARGET',
+          genes : 'GENES',
+          amp : 'ASSOCIATED METABOLIC PATHWAYS',
+          functions : 'FUNCTION',
+          uniport_id : 'UNIPROT ID',
+          reference : 'REFERENCE',
+          links : 'EXTERNAL LINKS',
+          species : 'SPECIES', 
+          family : 'FAMILY', 
+          country : 'COUNTRY OF COLLECTION', 
+          part : 'PART USED', 
+          extraction : 'EXTRACTION METHOD', 
+          solvents : 'SOLVENT(S) USED', 
+          metabolites : 'SECONDARY METABOLITES',
+          antimicro_mthds : 'ANTIMICROBIAL  ASSAY METHODS',
+          activity : 'ACTIVITY/MIC (µg/ml)', 
+          liver_cell : 'CC50 (µg/ml) Chang Liver Cell', 
+          exist_database : 'EXISITNG DATABASE', 
+          mycobacterium : 'NAME OF MYCOBACTERIUM', 
+          gene_info : 'GENETIC INFORMATION/ SIZE (bp)', 
+          pro_gene_stats : 'PROTEIN AND GENE STATS', 
+          accession : 'ACCESSION NUMBER / LOCUS', 
+          source : 'DATA SOURCE',
+          ncbi : 'NCBI LINK / DATA SOURCE',
+          article : 'NAME OF ARTICLE', 
+          genome_link : 'COMPLETE GENOME LINK+O1',
+          test_compound : 'TESTED COMPOUNDS',
+          mic : 'MIC', 
+          ic50 : 'IC50', 
+          technique : 'EXPERIMENTAL TECHNIQUE', 
+          structure : 'STRUCTURE',
+          m_weight : 'MOLECULAR WEIGHT',
+          properties : 'OTHER PROPERTIES',
+          cid : 'PUBCHEM CID',
+          drug_bank_id : 'DRUG BANK ID', 
+          drugs : 'EXISTING / POSSIBLE DRUGS',
+          class : 'CLASS',
+          targets : 'DRUG TARGETS',
+          mechanism : 'MECHANISM OF ACTION',
+          pharmacodynamics : 'PHARMACODYNAMICS',
+          mode : 'MODE OF ADMINISTRATION',
+          inhibitors : 'KNOWN INHIBITOR (S)',
+          reference_links : 'LINKS FOR REFERENCE MANAGER'
+      } %>
+
         <h1>Add an Entry to Specified Group</h1>
         <select id="groupSelector">
             <option value="drugTarget">Drug Target</option>
@@ -76,49 +123,258 @@
             <option value="existingDrugs">Existing Drugs</option>
         </select>
         <!--Create 5 forms-->
+        <style>
+          form input{
+            background-color:rgb(243, 229, 184);
+            border-bottom-width: 3px;
+          }
+        </style>
 
         <div name="entryForm" id="drugTarget" style="display: block;">
             <form action="/addEntry/drug_target" method="post" >
-                This is drug target form
+                <h3>Add new entry for Drug Target</h3>
+                <div style="float: left; width: 40%; min-width: 400px; margin-left: 20px; margin-bottom: 20px;">
+                  <% for(x in results['drug_target']){  
+                    if(x=='id'){ %>
+                      <input type="hidden" name="<%= x %>" value="<%= results['drug_target'][x] + 1 %>" readonly>
+                    <% continue } %>
+                    <br>
+                    <span class="header"><%= sub[x] %></span><br>
+                    <input type="text" name="<%= x%>" id="">
+                  <br>
+                  <% } %>
+                  <!--p class="header">Drug Target</p>
+                  <input type="text" name="drugTarget" id="">
+                  <br>
+                  <p class="header">Genes</p>
+                  <input type="text" name="genes" id="">
+                  <br>
+                  <p class="header">Associated Metabolic Pathways</p>
+                  <textarea type="text" name="amp" id=""></textarea>
+                  <br>
+                  <p class="header">Function</p>
+                  <textarea type="text" name="function" id=""></textarea>
+                </div>
+                <div style="float: left; width: 40%; min-width: 400px; margin-left: 4%;">
+                  <br>
+                  <p class="header">Uniport ID</p>
+                  <input type="text" name="drugTarget" id="">
+                  <br>
+                  <p class="header">Reference</p>
+                  <input type="text" name="reference" id="">
+                  <br>
+                  <p class="header">Links to Reference Manager</p>
+                  <input type="text" name="drugTarget" id=""-->
+                  <br>
+                  <input type="submit" value="Add Entry">
+                  <br>
+                </div>
+                
+                <br>
             </form>
         </div>
 
         <div name="entryForm" id="ethnoPlants" style="display: none;">
             <form action="/addEntry/ethnopharmacological" method="post" >
-                This is Ethoplant form
+              <h3>Add new entry for Ethnopharmacological Plants</h3>
+                <div style="float: left; width: 40%; min-width: 400px; margin-left: 20px; margin-bottom: 20px;">
+                  <% for(x in results['ethnopharmacological']){  
+                    if(x=='id'){ %>
+                      <input type="hidden" name="<%= x%>" value="<%= results['ethnopharmacological'][x] + 1 %>" readonly>
+                    <% continue; } %>
+                  <br>
+                    <span class="header"><%= sub[x] %></span><br>
+                    <input type="text" name="<%= x%>" id="">
+                  <br>
+                  <% } %>
+                  <!--p class="header">Species</p>
+                  <input type="text" name="species" id="">
+                  <br>
+                  <p class="header">Family</p>
+                  <input type="text" name="family" id="">
+                  <br>
+                  <p class="header">Country of Collection</p>
+                  <input type="text" name="country" id="">
+                  <br>
+                  <p class="header">Part Used</p>
+                  <textarea type="text" name="function" id=""></textarea>
+                  <br>
+                  <p class="header">Extraction Method</p>
+                  <textarea type="text" name="drugTarget" id=""></textarea>
+                  <br>
+                  <p class="header">Solvent Used</p>
+                  <textarea type="text" name="reference" id=""></textarea>
+                </div>
+                <div style="float: left; width: 40%; min-width: 400px; margin-left: 4%;">
+                  <br>
+                  <p class="header">Secondary Methabolites</p>
+                  <textarea type="text" name="drugTarget" id=""></textarea>
+                  <br>
+                  <p class="header">Antimicrobial Assay Methods</p>
+                  <input type="text" name="family" id="">
+                  <br>
+                  <p class="header">Activity/Mic (ug/ml)</p>
+                  <textarea type="text" name="family" id=""></textarea>
+                  <br>
+                  <p class="header">CC50 (ug/ml) Chang Liver Cell</p>
+                  <textarea type="text" name="family" id=""></textarea>
+                  <br>
+                  <p class="header">Reference</p>
+                  <textarea type="text" name="family" id=""></textarea>
+                  <br>
+                  <p class="header">External Links</p>
+                  <textarea type="text" name="family" id=""></textarea-->
+                  <br>
+                  <input type="submit" value="Add Entry">
+                  <br>
+                </div>
+                <br>
             </form>
         </div>
 
         <div name="entryForm" id="genome" style="display: none;">
             <form action="/addEntry/genome" method="post" >
-                This is genome form
+              <h3>Add new entry for Genome</h3>
+              <div style="float: left; width: 40%; min-width: 400px; margin-left: 20px; margin-bottom: 20px;">
+                <% for(x in results['genome']){  
+                  if(x=='id'){ %>
+                    <input type="hidden" name="<%= x%>" value="<%= results['genome'][x] + 1 %>" readonly>
+                  <% continue; } %>
+                  <br>
+                  <span class="header"><%= sub[x] %></span><br>
+                  <input type="text" name="<%= x%>" id="">
+                <br>
+                <% } %>
+                <!--p class="header">Name of Mycobacterium</p>
+                <input type="text" name="mycobacterium" id="">
+                <br>
+                <p class="header">Existing Database</p>
+                <input type="text" name="database" id="">
+                <br>
+                <p class="header">Genetic information/Size (bp)</p>
+                <textarea type="text" name="geneInfo" id=""></textarea>
+                <br>
+                <p class="header">Protein and Gene Stats</p>
+                <textarea type="text" name="stats" id=""></textarea>
+                <br>
+                <p class="header">Accession Number/Locus</p>
+                <input type="text" name="access" id="">
+                <br>
+                <p class="header">Data Source</p>
+                <input type="text" name="source" id="">
+              </div>
+              <div style="float: left; width: 40%; min-width: 400px; margin-left: 4%;">
+                <br>
+                <p class="header">Reference</p>
+                <text type="text" name="ref" id="">
+                <br>
+                <p class="header">NCBI Link/Data Source</p>
+                <input type="text" name="ncbi" id="">
+                <br>
+                <p class="header">Links</p>
+                <textarea type="text" name="links" id=""></textarea>
+                <br>
+                <p class="header">Name of Article</p>
+                <textarea type="text" name="article" id=""></textarea>
+                <br>
+                <p class="header">Complete Genome Link+01</p>
+                <textarea type="text" name="genLink" id=""></textarea-->
+                <br>
+                <input type="submit" value="Add Entry">
+                <br>
+              </div>
+              <br>
             </form>
         </div>
         
         <div name="entryForm" id="testCompounds" style="display: none;">
             <form action="/addEntry/test_compounds" method="post" >
-                This is testCompounds form
+              <h3>Add new entry for Test Compounds</h3>
+              <div style="float: left; width: 40%; min-width: 400px; margin-left: 20px; margin-bottom: 20px;">
+                  <% for(x in results['test_compounds']){  
+                    if(x=='id'){ %>
+                      <input type="hidden" name="<%= x%>" value="<%= results['test_compounds'][x] + 1 %>" readonly>
+                    <% continue; } %>
+                  <br>
+                    <span class="header"><%= sub[x] %></span><br>
+                    <input type="text" name="<%= x%>" id="">
+                  <br>
+                  <% } %>
+                  <!--p class="header">Drug Target</p>
+                  <input type="text" name="drugTarget" id="">
+                  <br>
+                  <p class="header">Genes</p>
+                  <input type="text" name="genes" id="">
+                  <br>
+                  <p class="header">Associated Metabolic Pathways</p>
+                  <textarea type="text" name="amp" id=""></textarea>
+                  <br>
+                  <p class="header">Function</p>
+                  <textarea type="text" name="function" id=""></textarea>
+                </div>
+                <div style="float: left; width: 40%; min-width: 400px; margin-left: 4%;">
+                  <br>
+                  <p class="header">Uniport ID</p>
+                  <input type="text" name="drugTarget" id="">
+                  <br>
+                  <p class="header">Reference</p>
+                  <input type="text" name="reference" id="">
+                  <br>
+                  <p class="header">Links to Reference Manager</p>
+                  <input type="text" name="drugTarget" id=""-->
+                  <br>
+                  <input type="submit" value="Add Entry">
+                  <br>
+                </div>
+                <br>
             </form>
         </div>
 
         <div name="entryForm" id="existingDrugs" style="display: none;">
             <form action="/addEntry/existing_drugs" method="post" >
-                This is existingDrugs form
+              <h3>Add new entry for Existing Drugs</h3>
+              <div style="float: left; width: 40%; min-width: 400px; margin-left: 20px; margin-bottom: 20px;">
+                  <% for(x in results['existing_drugs']){  
+                    if(x=='id'){ %>
+                      <input type="hidden" name="<%= x%>" value="<%= results['existing_drugs'][x] + 1 %>" readonly>
+                    <% continue; } %>
+                  <br>
+                    <span class="header"><%= sub[x] %></span><br>
+                    <input type="text" name="<%= x%>" id="">
+                  <br>
+                  <% } %>
+                  <!--p class="header">Drug Target</p>
+                  <input type="text" name="drugTarget" id="">
+                  <br>
+                  <p class="header">Genes</p>
+                  <input type="text" name="genes" id="">
+                  <br>
+                  <p class="header">Associated Metabolic Pathways</p>
+                  <textarea type="text" name="amp" id=""></textarea>
+                  <br>
+                  <p class="header">Function</p>
+                  <textarea type="text" name="function" id=""></textarea>
+                </div>
+                <div style="float: left; width: 40%; min-width: 400px; margin-left: 4%;">
+                  <br>
+                  <p class="header">Uniport ID</p>
+                  <input type="text" name="drugTarget" id="">
+                  <br>
+                  <p class="header">Reference</p>
+                  <input type="text" name="reference" id="">
+                  <br>
+                  <p class="header">Links to Reference Manager</p>
+                  <input type="text" name="drugTarget" id=""-->
+                  <br>
+                  <input type="submit" value="Add Entry">
+                  <br>
+                </div>
+                
+                <br>
             </form>
         </div>
 
         <script src="/javascripts/adminPage.js"></script>
 
         <!--CONTENT ENDS HERE-->
-      </div>
-    </section>
     
-    <footer class="u-align-center u-clearfix u-footer u-grey-80 u-footer" id="sec-9dbd"><div class="u-clearfix u-sheet u-sheet-1">
-        <p class="u-small-text u-text u-text-variant u-text-1" spellcheck="false"> Please contact <b>BUDb</b>&nbsp;through <a href="mailto:dtanyimadu@gmail.com?subject=Hello" class="u-active-none u-border-none u-btn u-button-link u-button-style u-hover-none u-none u-text-palette-1-base u-btn-1">email</a>&nbsp;to add to our database
-other vital information that will help accelerate the development of novel
-drug(s) for the treatment of <b>Buruli
-ulcer</b>.
-        </p>
-      </div></footer>
-  </body>
-</html>

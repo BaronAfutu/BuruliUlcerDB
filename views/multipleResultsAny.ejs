@@ -1,4 +1,13 @@
 <!DOCTYPE html>
+<%
+  var groups = {
+    drug_target: "Drug Targets",
+    ethnopharmacological: "Ethnopharmacological Plants",
+    genome: "Genome",
+    test_compounds: "Tested Compounds",
+    existing_drugs: "Existing Drugs"
+  }
+%>
 <html style="font-size: 16px;">
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -66,10 +75,10 @@
     <section class="u-clearfix u-palette-4-light-3 u-section-1" id="sec-c724">
       <div class="u-clearfix u-sheet u-sheet-1">
 
-        <h2>Multiple results were found for "<%= title %>"</h2>
+        <h2>Multiple results were found for "<%= sv %>"</h2>
         <ul>
             <% for(let i=0;i< resultsSize;i++){ %>
-                <li> <a href="/results/<%= results[i]['group'] %>/<%= results[i]['id'] %>"> <%= results[i]['resName'] %> (Group: <%= results[i]['group'] %>)</a> </li>
+                <li> <a href="/results/<%= results[i]['group'] %>/<%= results[i]['id'] %>"> <%= results[i]['resName'] %> (Group: <%= groups[results[i]['group']] %>)</a> </li>
             <% } %>
         </ul>
 

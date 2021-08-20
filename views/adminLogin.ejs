@@ -41,7 +41,7 @@
           <div class="u-custom-menu u-nav-container">
             <ul class="u-nav u-unstyled u-nav-1"><li class="u-nav-item"><a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="/" style="padding: 10px 20px;">Home</a>
 </li><li class="u-nav-item"><a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="/#browse" style="padding: 10px 20px;">Browse</a>
-</li><li class="u-nav-item"><a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="/#aboutus" style="padding: 10px 20px;">Contact</a>
+</li><li class="u-nav-item"><a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="/#contact" style="padding: 10px 20px;">Contact</a>
 </li><li class="u-nav-item"><a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="/users" style="padding: 10px 20px;">Admin</a>
 </li></ul>
           </div>
@@ -51,7 +51,7 @@
                 <div class="u-menu-close"></div>
                 <ul class="u-align-center u-nav u-popupmenu-items u-unstyled u-nav-2"><li class="u-nav-item"><a class="u-button-style u-nav-link" href="/" style="padding: 10px 20px;">Home</a>
 </li><li class="u-nav-item"><a class="u-button-style u-nav-link" href="/#browse" style="padding: 10px 20px;">Browse</a>
-</li><li class="u-nav-item"><a class="u-button-style u-nav-link" href="/#aboutus" style="padding: 10px 20px;">Contact</a>
+</li><li class="u-nav-item"><a class="u-button-style u-nav-link" href="/#contact" style="padding: 10px 20px;">Contact</a>
 </li><li class="u-nav-item"><a class="u-button-style u-nav-link" href="/users" style="padding: 10px 20px;">Admin</a>
 </li></ul>
               </div>
@@ -59,29 +59,30 @@
             <div class="u-black u-menu-overlay u-opacity u-opacity-70"></div>
           </div>
         </nav>
-
+        
         <%- include('anyGroupSearch') %>
         
       </div></header>
     <section class="u-clearfix u-palette-4-light-3 u-section-1" id="sec-c724">
       <div class="u-clearfix u-sheet u-sheet-1">
+        
+        <!--CONTENT COMES HERE-->
+        <form action="/users/login" method="post">
+            <h3 style="text-align: center;color:red;"><%= msg %></h3>
 
-        <h2>Multiple results were found for "<%= sv %>"</h2>
-        <ul>
-            <% for(let i=0;i< resultsSize;i++){ %>
-                <li> <a href="/results/<%= group %>/<%= results[i]['id'] %>"> <%= results[i]['resName'] %></a> </li>
-            <% } %>
-        </ul>
-
-
+            <p style="text-align: center;">User Name: <input type="text" name="username" id=""><br></p>
+            <p style="text-align: center;">Password: <input type="password" name="password" id=""><br></p>
+            
+            <p style="text-align: center;"><input type="submit" value="Login"></p>
+        </form>
+        <!--CONTENT ENDS HERE-->
       </div>
     </section>
     
     <footer class="u-align-center u-clearfix u-footer u-grey-80 u-footer" id="sec-9dbd"><div class="u-clearfix u-sheet u-sheet-1">
         <p class="u-small-text u-text u-text-variant u-text-1" spellcheck="false"> Please contact <b>BUDb</b>&nbsp;through <a href="mailto:dtanyimadu@gmail.com?subject=Hello" class="u-active-none u-border-none u-btn u-button-link u-button-style u-hover-none u-none u-text-palette-1-base u-btn-1">email</a>&nbsp;to add to our database
-other vital information that will help accelerate the development of novel
-drug(s) for the treatment of <b>Buruli
-ulcer</b>.
+          other vital information that will help accelerate the development of novel
+          drug(s) for the treatment of <b>Buruli ulcer</b>.
         </p>
       </div></footer>
   </body>

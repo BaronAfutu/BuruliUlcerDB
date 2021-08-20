@@ -4,8 +4,20 @@ block content
   h1= message
   h2= error.status
   pre #{error.stack}-->
-<%- include('header',{title:'title'}); %>
-  <h1>Error page this</h1>
+<%- include('header',{title:'Error - BUDB'}); %>
+  <h1>Error!!</h1>
+  <h4>Error - </h4>
+  <pre><%= errMsg %></pre>
 
+</div>
+</section>
+
+<footer class="u-align-center u-clearfix u-footer u-grey-80 u-footer" id="sec-9dbd"><div class="u-clearfix u-sheet u-sheet-1">
+    <p class="u-small-text u-text u-text-variant u-text-1" spellcheck="false"> Please contact <b>BUDb</b>&nbsp;through <a href="mailto:dtanyimadu@gmail.com?subject=Hello" class="u-active-none u-border-none u-btn u-button-link u-button-style u-hover-none u-none u-text-palette-1-base u-btn-1">email</a>&nbsp;to add to our database
+other vital information that will help accelerate the development of novel
+drug(s) for the treatment of <b>Buruli
+ulcer</b>.
+    </p>
+  </div></footer>
 </body>
 </html>

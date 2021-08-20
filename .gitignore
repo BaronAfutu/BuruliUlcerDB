@@ -46,6 +46,8 @@ BURULI ULCER DATABASE.zip
 run.bat
 tasks.txt
 test.sql
+bin/dbConfig.json
+bin/_dbConfig.json
 
 # TypeScript v1 declaration files
 typings/

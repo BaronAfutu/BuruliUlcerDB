@@ -125,6 +125,10 @@
                   <pre  class="content" name="content"><%= result[x] %></pre>
               <% } else if(x==="genes"){ %>
                   <pre style="font-style:italic;"  class="content" name="content"><%= result[x] %></pre>
+                <% } else if(x==="drug_bank_id"){ %>
+                  <a href="https://go.drugbank.com/drugs/<%= result[x] %>" target="_blank">
+                      <pre><%= result[x] %></pre>
+                  </a>
               <% } else if(x==="uniport_id"){ %>
                   <a href="https://www.uniprot.org/uniprot/<%= result[x] %>" target="_blank">
                       <pre><%= result[x] %></pre>

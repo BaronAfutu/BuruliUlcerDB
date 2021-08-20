@@ -62,6 +62,7 @@ router.get('/any/results',async (req,res)=>{
     res.status(200);
     res.render('multipleResultsAny',{
       title : search_val + ' - BUDB',
+      sv : search_val,
       results : retrivedResults,
       resultsSize : resSize
     })
@@ -69,7 +70,34 @@ router.get('/any/results',async (req,res)=>{
 })
 
 
+router.post('/addEntry/:group', (req,res)=>{
+  //console.log(req.params.group)
+  if(!req.params.group){res.render('error',{title: "Error Page"})}
+  let i=0;
+  let addData = [];
+  let addDataStr = "";
+  let entry = req.body;
+  for(x in entry){
+    //console.log(`${x}: ${entry[x]}`);
+    if(i==0 && entry[x]==''){
+      res.render('error',{errMsg: "The first field in the form cannot be empty!!"})
+      //console.log(`${x} cannot be empty`);
+    }
+    else{
+      addData.push(entry[x]);
+    }
+  }
+  addDataStr = addData.join(',');
+  
+  let qry = "INSERT INTO " + req.params.group + " VALUES (" + addDataStr + ")";
+  //console.log(qry);
 
+  dbConnect.query(qry,function(err,results,fields){
+    if(err)throw err;
+    res.render()
+  });
+  //console.log(addDataStr);
+})
 
 //have to sanitize inputs here too
 router.get('/results/:group/:id',(req,res)=>{
@@ -165,6 +193,7 @@ router.get('/results',(req,res)=>{
       res.status(200);
       res.render('multipleResults',{
         title : search_val + ' - BUDB',
+        sv : search_val,
         results : retrived,
         resultsSize : resSize,
         group : group

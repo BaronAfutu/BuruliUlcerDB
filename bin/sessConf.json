@@ -1,0 +1,6 @@
+{
+    "secret": "thisismysecrctekeyfhrgfgrfrty84fwir767",
+    "saveUninitialized":true,
+    "cookie": { "maxAge": 86400000},
+    "resave": false
+}
