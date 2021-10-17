@@ -3,6 +3,17 @@ var dbConnect = require('../bin/db');
 var syncSql = require('sync-sql');
 var config = require('../bin/dbConfig.json');
 var router = express.Router();
+require('dotenv').config({ path: './.env' });
+
+if(process.env.ENV){
+  config = {
+    "host"     : process.env.SERVER,
+    "user"     : process.env.USER_NAME,
+    "password" : process.env.PASSWORD,
+    "database" : process.env.DBNAME
+  }
+  //console.log(config);
+}
 
 /* GET home page. */
 router.get('/', function(req, res) {
