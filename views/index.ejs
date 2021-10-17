@@ -39,22 +39,12 @@
 </defs></svg>
             </a>
           </div>
-          <div class="u-custom-menu u-nav-container">
-            <ul class="u-nav u-unstyled u-nav-1"><li class="u-nav-item"><a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="/" style="padding: 10px 20px;">Home</a>
-</li><li class="u-nav-item"><a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="/#browse" style="padding: 10px 20px;">Browse</a>
-</li><li class="u-nav-item"><a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="/#aboutus" style="padding: 10px 20px;">Contact</a>
-</li><li class="u-nav-item"><a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="/users" style="padding: 10px 20px;">Admin</a>
-</li></ul>
-          </div>
+          <%- include('topNav') %>
           <div class="u-custom-menu u-nav-container-collapse">
             <div class="u-black u-container-style u-inner-container-layout u-opacity u-opacity-95 u-sidenav">
               <div class="u-sidenav-overflow">
                 <div class="u-menu-close"></div>
-                <ul class="u-align-center u-nav u-popupmenu-items u-unstyled u-nav-2"><li class="u-nav-item"><a class="u-button-style u-nav-link" href="/" style="padding: 10px 20px;">Home</a>
-</li><li class="u-nav-item"><a class="u-button-style u-nav-link" href="/#browse" style="padding: 10px 20px;">Browse</a>
-</li><li class="u-nav-item"><a class="u-button-style u-nav-link" href="/#aboutus" style="padding: 10px 20px;">Contact</a>
-</li><li class="u-nav-item"><a class="u-button-style u-nav-link" href="/users" style="padding: 10px 20px;">Admin</a>
-</li></ul>
+                <%- include('sideNav') %>
               </div>
             </div>
             <div class="u-black u-menu-overlay u-opacity u-opacity-70"></div>
@@ -104,40 +94,40 @@
         <h2 id="browse" class="u-text u-text-default u-text-1" spellcheck="false">BROWSE</h2>
         <p class="u-align-center u-text u-text-default u-text-2" spellcheck="false">Data available for your search include, <span style="font-weight: 700;">Drug Target, Tested Compounds, Existing Drugs, Ethnopharmacological Plants</span> and <span style="font-weight: 700;">Genome</span> of Mycobacterium Ulcerans
         </p>
-        <div class="u-expanded-width-lg u-expanded-width-md u-expanded-width-sm u-expanded-width-xl u-layout-horizontal u-list u-list-1">
+        <!--div class="u-expanded-width-lg u-expanded-width-md u-expanded-width-sm u-expanded-width-xl u-layout-horizontal u-list u-list-1"-->
           <div class="u-repeater u-repeater-1">
             <div class="u-container-style u-list-item u-repeater-item">
-              <div class="u-container-layout u-similar-container u-container-layout-1"><span class="u-file-icon u-icon u-icon-rectangle u-icon-1"><img src="/images/drugTarget_150.png" alt=""></span>
+              <a href="/browse/drug_target" style="color: black;"><div class="u-container-layout u-similar-container u-container-layout-1"><span class="u-file-icon u-icon u-icon-rectangle u-icon-1"><img src="/images/drugTarget_150.png" alt=""></span>
                 <h3 class="u-align-center u-text u-text-default u-text-3">DRUG TARGET</h3>
                 <p class="u-align-center u-text u-text-4" spellcheck="false">These are proteins that are absent in the human host yet are required for survival and also essential components in the physiochemical and metabolic pathways for M. ulcerans.</p>
-              </div>
+              </div></a>
             </div>
             <div class="u-container-style u-list-item u-repeater-item">
-              <div class="u-container-layout u-similar-container u-container-layout-2"><span class="u-file-icon u-icon u-icon-rectangle u-icon-2"><img src="/images/genome_150.png" alt=""></span>
+              <a href="/browse/genome" style="color: black;"><div class="u-container-layout u-similar-container u-container-layout-2"><span class="u-file-icon u-icon u-icon-rectangle u-icon-2"><img src="/images/genome_150.png" alt=""></span>
                 <h3 class="u-align-center u-text u-text-default u-text-5">GENOME</h3>
                 <p class="u-align-center u-text u-text-6" spellcheck="false">This comprises of the complete set of genes present in Mycobacterium ulcerans.</p>
-              </div>
+              </div></a>
             </div>
             <div class="u-align-center u-container-style u-list-item u-repeater-item">
-              <div class="u-container-layout u-similar-container u-container-layout-3"><span class="u-file-icon u-icon u-icon-rectangle u-icon-3"><img src="/images/testedCompounds_150.png" alt=""></span>
+              <a href="/browse/test_compounds" style="color: black;"><div class="u-container-layout u-similar-container u-container-layout-3"><span class="u-file-icon u-icon u-icon-rectangle u-icon-3"><img src="/images/testedCompounds_150.png" alt=""></span>
                 <h3 class="u-align-center u-text u-text-default u-text-7">TESTED COMPOUNDS</h3>
                 <p class="u-align-center u-text u-text-8" spellcheck="false">These are chemical compounds that have been screened or tested in vitro, in silico or in vivo, with some proving to be therapeutically efficacious in their applications.</p>
-              </div>
+              </div></a>
             </div>
             <div class="u-container-style u-list-item u-repeater-item">
-              <div class="u-container-layout u-similar-container u-container-layout-5"><span class="u-file-icon u-icon u-icon-rectangle u-icon-5"><img src="/images/drugsPlants_150.png" alt=""></span>
+              <a href="/browse/existing_drugs" style="color: black;"><div class="u-container-layout u-similar-container u-container-layout-5"><span class="u-file-icon u-icon u-icon-rectangle u-icon-5"><img src="/images/drugsPlants_150.png" alt=""></span>
                 <h3 class="u-align-center u-text u-text-default u-text-11"><span style="padding-left: 5rem; padding-right: 5rem;">EXISTING&nbsp;DRUGS</span></h3>
                 <p class="u-align-center u-text u-text-12" spellcheck="false">These are available drugs employed for the treatment of Buruli ulcer.</p>
-              </div>
+              </div></a>
             </div>
             <div class="u-container-style u-list-item u-repeater-item">
-              <div class="u-container-layout u-similar-container u-container-layout-5"><span class="u-file-icon u-icon u-icon-rectangle u-icon-5"><img src="/images/plant_150.png" alt=""></span>
+              <a href="/browse/ethnopharmacological" style="color: black;"><div class="u-container-layout u-similar-container u-container-layout-5"><span class="u-file-icon u-icon u-icon-rectangle u-icon-5"><img src="/images/plant_150.png" alt=""></span>
                 <h3 class="u-align-center u-text u-text-default u-text-11">ETHNOPHARMOCOLOGICAL PLANTS</h3>
                 <p class="u-align-center u-text u-text-12" spellcheck="false">These are medicinal plants and plants extract, traditionally used for the treatment of Buruli ulcer.</p>
-              </div>
+              </div></a>
             </div>
           </div>
-          <a class="u-absolute-vcenter u-gallery-nav u-gallery-nav-prev u-grey-70 u-icon-circle u-opacity u-opacity-70 u-spacing-10 u-text-white u-gallery-nav-1" href="#" role="button">
+          <a class="u-absolute-vcenter u-gallery-nav u-gallery-nav-prev u-grey-70 u-icon-circle u-opacity u-opacity-70 u-spacing-10 u-text-white u-gallery-nav-1 u-hidden" href="#" role="button">
             <span aria-hidden="true">
               <svg viewBox="0 0 451.847 451.847"><path d="M97.141,225.92c0-8.095,3.091-16.192,9.259-22.366L300.689,9.27c12.359-12.359,32.397-12.359,44.751,0
 c12.354,12.354,12.354,32.388,0,44.748L173.525,225.92l171.903,171.909c12.354,12.354,12.354,32.391,0,44.744
@@ -149,7 +139,7 @@ c12.354,12.354,12.354,32.388,0,44.748L173.525,225.92l171.903,171.909c12.354,12.3
 c-12.354,12.365-32.386,12.365-44.745,0l-194.29-194.281C100.226,242.115,97.141,234.018,97.141,225.92z"></path></svg>
             </span>
           </a>
-          <a class="u-absolute-vcenter u-gallery-nav u-gallery-nav-next u-grey-70 u-icon-circle u-opacity u-opacity-70 u-spacing-10 u-text-white u-gallery-nav-2" href="#" role="button">
+          <a class="u-absolute-vcenter u-gallery-nav u-gallery-nav-next u-grey-70 u-icon-circle u-opacity u-opacity-70 u-spacing-10 u-text-white u-gallery-nav-2 u-hidden" href="#" role="button">
             <span aria-hidden="true">
               <svg viewBox="0 0 451.846 451.847"><path d="M345.441,248.292L151.154,442.573c-12.359,12.365-32.397,12.365-44.75,0c-12.354-12.354-12.354-32.391,0-44.744
 L278.318,225.92L106.409,54.017c-12.354-12.359-12.354-32.394,0-44.748c12.354-12.359,32.391-12.359,44.75,0l194.287,194.284
@@ -161,7 +151,7 @@ L278.318,225.92L106.409,54.017c-12.354-12.359-12.354-32.394,0-44.748c12.354-12.3
 c6.177,6.18,9.262,14.271,9.262,22.366C354.708,234.018,351.617,242.115,345.441,248.292z"></path></svg>
             </span>
           </a>
-        </div>
+        <!--/div-->
       </div>
     </section>
     <section class="u-align-center u-clearfix u-palette-4-light-3 u-section-3" id="sec-890f">
@@ -181,7 +171,7 @@ accessing our <b>Gmail account</b> to add
 to our database other vital information that will help accelerate the
 development of novel drug(s) for the treatment of <b>Buruli ulcer</b>. 
             </p>
-            <a href="mailto:dtanyimadu@gmail.com?subject=Hello" class="u-btn u-btn-round u-button-style u-hover-palette-1-dark-1 u-palette-1-base u-radius-15 u-btn-1">Contact Us</a>
+            <a href="/contactUs" class="u-btn u-btn-round u-button-style u-hover-palette-1-dark-1 u-palette-1-base u-radius-15 u-btn-1">Contact Us</a>
           </div>
         </div>
       </div>

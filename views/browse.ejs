@@ -49,31 +49,63 @@
             <div class="u-black u-menu-overlay u-opacity u-opacity-70"></div>
           </div>
         </nav>
-        
+
         <%- include('anyGroupSearch') %>
         
       </div></header>
     <section class="u-clearfix u-palette-4-light-3 u-section-1" id="sec-c724">
       <div class="u-clearfix u-sheet u-sheet-1">
-        
-        <!--CONTENT COMES HERE-->
-        <form action="/users/login" method="post">
-            <h3 style="text-align: center;color:red;"><%= msg %></h3>
 
-            <p style="text-align: center;">User Name: <input type="text" name="username" id=""><br></p>
-            <p style="text-align: center;">Password: <input type="password" name="password" id=""><br></p>
-            
-            <p style="text-align: center;"><input type="submit" value="Login"></p>
-        </form>
-        <!--CONTENT ENDS HERE-->
+        <h2><%= groupDisplay %></h2>
+        <% let makeLink = false; %>
+
+        <table style="width: 100%; border: 1px solid black;">
+          <tr>
+            <%  for(i of headers){ %>
+              <th style="border: 1px solid black;"><%= i %></th>
+            <% } %>
+          </tr>
+          <% for(let i=0;i< resultsSize;i++){ %>
+
+            <tr name="rowData">
+              <% for(x in results[i]){ %>
+                <% if(x==="id"){ makeLink=true; continue; } //Skip ID field %>
+                
+                <% if(results[i][x]==="nan"){ %>
+                  <td name="textEntry" style="border: 1px solid black; padding: 5px;">N/A</td>
+                <% } else { %>
+
+                  <% if(makeLink==true){ %>
+                    <td name="textEntry" style="border: 1px solid black; padding: 5px;">
+                      <a href="/results/<%= group %>/<%= results[i]['id'] %>"> <%= results[i][x] %></a>
+                    </td>
+                  <% makeLink=false; } else { %>
+                    <td name="textEntry" style="border: 1px solid black; padding: 5px;"><%= results[i][x] %></td>
+                  <% } %>
+
+                <% } %>
+              <% } %>
+              </tr>
+          <% } %>
+        </table>
+
+        <br>
+        <div>
+           <span id="prevBtn" style="font-size: 24px;cursor: pointer;">&leftarrow;</span>Prev
+           <input style="width: 40px; text-align: center;" type="number" name="pgNumber" id="pgNumber" value="1" max="10" min="1" readonly>
+           Next<span id="nxtBtn" style="font-size: 24px;cursor: pointer;">&rightarrow;</span>  
+        </div>
+        
       </div>
     </section>
     
     <footer class="u-align-center u-clearfix u-footer u-grey-80 u-footer" id="sec-9dbd"><div class="u-clearfix u-sheet u-sheet-1">
         <p class="u-small-text u-text u-text-variant u-text-1" spellcheck="false"> Please contact <b>BUDb</b>&nbsp;through <a href="mailto:dtanyimadu@gmail.com?subject=Hello" class="u-active-none u-border-none u-btn u-button-link u-button-style u-hover-none u-none u-text-palette-1-base u-btn-1">email</a>&nbsp;to add to our database
-          other vital information that will help accelerate the development of novel
-          drug(s) for the treatment of <b>Buruli ulcer</b>.
+other vital information that will help accelerate the development of novel
+drug(s) for the treatment of <b>Buruli
+ulcer</b>.
         </p>
       </div></footer>
+      <script src="/javascripts/browsePage.js"></script>
   </body>
 </html>

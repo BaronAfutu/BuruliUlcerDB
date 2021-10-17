@@ -15,12 +15,26 @@ router.get('/', function(req, res) {
 router.get('/any/results',async (req,res)=>{
   let search_val = req.query.search_val;
   var retrivedResults = [];
-  let queries = {
+  
+  let cndtn1 = "id LIKE '%"+search_val+"%' OR drug_target LIKE '%"+search_val+"%' OR genes LIKE '%"+search_val+"%' OR amp LIKE '%"+search_val+"%' OR functions LIKE '%"+search_val+"%' OR uniport_id LIKE '%"+search_val+"%' OR reference LIKE '%"+search_val+"%' OR links LIKE '%"+search_val+"%'";
+  let cndtn2 = "id LIKE '%"+search_val+"%' OR species LIKE '%"+search_val+"%' OR family LIKE '%"+search_val+"%' OR country LIKE '%"+search_val+"%' OR part LIKE '%"+search_val+"%' OR extraction LIKE '%"+search_val+"%' OR solvents LIKE '%"+search_val+"%' OR metabolites LIKE '%"+search_val+"%' OR antimicro_mthds LIKE '%"+search_val+"%' OR activity LIKE '%"+search_val+"%' OR liver_cell LIKE '%"+search_val+"%' OR reference LIKE '%"+search_val+"%' OR links LIKE '%"+search_val+"%'";
+  let cndtn3 = "id LIKE '%"+search_val+"%' OR mycobacterium LIKE '%"+search_val+"%' OR exist_database LIKE '%"+search_val+"%' OR gene_info LIKE '%"+search_val+"%' OR pro_gene_stats LIKE '%"+search_val+"%' OR accession LIKE '%"+search_val+"%' OR source LIKE '%"+search_val+"%' OR reference LIKE '%"+search_val+"%' OR ncbi LIKE '%"+search_val+"%' OR links LIKE '%"+search_val+"%' OR article LIKE '%"+search_val+"%' OR genome_link LIKE '%"+search_val+"%'";
+  let cndtn4 = "id LIKE '%"+search_val+"%' OR test_compound LIKE '%"+search_val+"%' OR mic LIKE '%"+search_val+"%' OR ic50 LIKE '%"+search_val+"%' OR technique LIKE '%"+search_val+"%' OR structure LIKE '%"+search_val+"%' OR m_weight LIKE '%"+search_val+"%' OR drug_target LIKE '%"+search_val+"%' OR properties LIKE '%"+search_val+"%' OR cid LIKE '%"+search_val+"%' OR drug_bank_id LIKE '%"+search_val+"%' OR reference LIKE '%"+search_val+"%'";
+  let cndtn5 = "id LIKE '%"+search_val+"%' OR drugs LIKE '%"+search_val+"%' OR class LIKE '%"+search_val+"%' OR targets LIKE '%"+search_val+"%' OR mechanism LIKE '%"+search_val+"%' OR pharmacodynamics LIKE '%"+search_val+"%' OR mode LIKE '%"+search_val+"%' OR inhibitors LIKE '%"+search_val+"%' OR drug_bank_id LIKE '%"+search_val+"%' OR links LIKE '%"+search_val+"%' OR reference LIKE '%"+search_val+"%' OR reference_links LIKE '%"+search_val+"%'";
+
+  /*let queries = {
     drug_target : "SELECT id,drug_target from drug_target where drug_target LIKE '%" + search_val + "%' ",
     ethnopharmacological : "SELECT id,species from ethnopharmacological where species LIKE '%" + search_val + "%' ",
     genome : "SELECT id,mycobacterium from genome where mycobacterium LIKE '%" + search_val + "%' ",
     test_compounds : "SELECT id,test_compound from test_compounds where test_compound LIKE '%" + search_val + "%' ",
     existing_drugs : "SELECT id,drugs from existing_drugs where drugs LIKE '%" + search_val + "%' "
+  };*/
+  let queries = {
+    drug_target : "SELECT id,drug_target,functions from drug_target where ("+cndtn1+")",
+    ethnopharmacological : "SELECT id,species,solvents,metabolites from ethnopharmacological where ("+cndtn2+")",
+    genome : "SELECT id,mycobacterium,gene_info,pro_gene_stats from genome where ("+cndtn3+")",
+    test_compounds : "SELECT id,test_compound,properties,drug_target from test_compounds where ("+cndtn4+")",
+    existing_drugs : "SELECT id,drugs,mechanism,pharmacodynamics from existing_drugs where ("+cndtn5+")"
   };
 
   for(qry in queries){
@@ -31,12 +45,31 @@ router.get('/any/results',async (req,res)=>{
     
     if(error)res.render('error');
     let resSize = results.length;
+
     if(resSize>0){
+
+      let searchHit = "";   //Getting matched results
+      for(let i=0;i<resSize;i++){
+        searchHit = "";
+        for(x in results[i]){
+          if(x=="id"){
+            continue;
+          }
+          let searchIndex = results[i][x].indexOf(search_val);
+          if (searchIndex>-1){
+            searchHit = "..."+ results[i][x].substring(searchIndex-40,searchIndex+search_val.length+40);
+          }
+        }
+        if(searchHit=="")searchHit="found within detailed information";
+        results[i]["matched"] = searchHit;
+      }
+
       for( result of results){
         retrivedResults.push({
           id: result['id'],
           resName: result[fields[1].name],
-          group: qry
+          group: qry,
+          matched: result['matched']
         });
       }
     }
@@ -143,7 +176,7 @@ router.use('/results',(req,res,next)=>{
   next();
 })
 
-//Fetching results
+//Deep Fetching results
 router.get('/results',(req,res)=>{
   //let cont = true;
   let {search_val,group} = req.query;
@@ -156,7 +189,24 @@ router.get('/results',(req,res)=>{
     existing_drugs : 'drugs'
   }
 
-  let qry = "SELECT * from " + group + " where " + col[group] + " LIKE '%" + search_val + "%'";
+  let qry1 = "SELECT * from " + group + " LIMIT 1";
+  let qryCond = "";
+
+  let output = syncSql.mysql(config,qry1);
+  let error = output.success==false;
+  let results = output.data.rows;
+  let fields = output.data.fields;
+
+  if(error)res.render('error');
+  for(x in results[0]){
+    qryCond+=" "+x+" LIKE '%"+search_val+"%' OR";
+  }
+  qryCond = qryCond.substr(0,qryCond.length-2);
+  //console.log(qryCond);
+
+
+  let qry = "SELECT * from " + group + " where ("+qryCond+")";
+  //let qry = "SELECT * from " + group + " where " + col[group] + " LIKE '%" + search_val + "%'";
 
   dbConnect.query(qry,function(err,results,fields){
     if(err)throw err;
@@ -184,10 +234,22 @@ router.get('/results',(req,res)=>{
     else{
       //more results retrived
       let retrived = [];
+      let searchHit = "";
       for(let i=0;i<resSize;i++){
+        searchHit = "";
+        for(x in results[i]){
+          if(x=="id"){
+            continue;
+          }
+          let searchIndex = results[i][x].indexOf(search_val);
+          if (searchIndex>-1){
+            searchHit = "..."+ results[i][x].substring(searchIndex-40,searchIndex+search_val.length+40);
+          }
+        }
         retrived[i] = {
           id : results[i]['id'],
-          resName : results[i][fields[1].name]
+          resName : results[i][fields[1].name],
+          matched : searchHit
         }
       }
       res.status(200);
@@ -202,8 +264,73 @@ router.get('/results',(req,res)=>{
   })  
 });
 
-router.get('/contact',(req,res)=>{
-  res.render('contact');
+
+
+router.get('/browse/:group',(req,res)=>{
+  let group = req.params.group;
+  let groupMatch={
+    "drug_target": "Drug Target",
+    "ethnopharmacological": "Ethnopharmacological Plants",
+    "genome": "Genome",
+    "test_compounds": "Tested Compounds",
+    "existing_drugs": "Existing Drugs"
+  }
+
+  let queries = {
+    "drug_target": "SELECT id,drug_target,genes,functions,uniport_id,links from " + group,
+    "ethnopharmacological": "SELECT id,species,country,part,extraction,links from " + group,
+    "genome": "SELECT id,exist_database,mycobacterium,pro_gene_stats,genome_link from " + group,
+    "test_compounds": "SELECT id,test_compound,technique,cid,drug_bank_id,reference from " + group,
+    "existing_drugs": "SELECT id,drugs,targets,mode,drug_bank_id,reference_links from " + group
+  }
+
+  let headers={
+    "drug_target": ["Drug Target","Genes","Function","Uniprot ID","Links to Reference Manager"],
+    "ethnopharmacological": ["Species","Country of Collection","Part Used","Extraction Method","External Links"],
+    "genome": ["Existing Database", "Name of Mycobacterium","Protein and Gene Stats","Genome Link"],
+    "test_compounds": ["Tested Compounds","Experimental Technique","PubChem ID","Drug Bank ID","Reference"],
+    "existing_drugs": ["Existing Drugs","Drug Target","Mode of Administration","Drug Bank ID","Links to Reference Manager"]
+  }
+  //let qry = "SELECT * from " + group;
+
+  dbConnect.query(queries[group],function(err,results,fields){
+    if(err)throw err;
+    //console.log(results);
+
+    let resSize = results.length;
+    if(resSize==0){
+      //no results found
+      res.status(200);
+      return res.render('noResults',{
+        title : 'Not Found - BUDB',
+        sv : search_val
+      });
+    }
+    else{
+      //Table retrieved
+      res.status(200);
+      return res.render('browse',{
+        title : groupMatch[group]+' - BUDB',
+        group : group,
+        groupDisplay: groupMatch[group],
+        results : results,
+        resultsSize : resSize,
+        headers: headers[group]
+      });
+    }
+  });
+});
+
+router.get('/faqs',(req,res)=>{
+  res.render('faqs',{title:'FAQS'});
+});
+
+router.get('/tutorials',(req,res)=>{
+  res.render('tutorials',{title: 'Tutorials'});
+});
+
+router.get('/contactUs',(req,res)=>{
+  res.render('contactUs',{title: 'Contact Us'});
 })
 
 module.exports = router;

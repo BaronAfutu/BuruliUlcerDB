@@ -49,30 +49,74 @@
             <div class="u-black u-menu-overlay u-opacity u-opacity-70"></div>
           </div>
         </nav>
-        
+
         <%- include('anyGroupSearch') %>
         
       </div></header>
     <section class="u-clearfix u-palette-4-light-3 u-section-1" id="sec-c724">
       <div class="u-clearfix u-sheet u-sheet-1">
-        
-        <!--CONTENT COMES HERE-->
-        <form action="/users/login" method="post">
-            <h3 style="text-align: center;color:red;"><%= msg %></h3>
 
-            <p style="text-align: center;">User Name: <input type="text" name="username" id=""><br></p>
-            <p style="text-align: center;">Password: <input type="password" name="password" id=""><br></p>
-            
-            <p style="text-align: center;"><input type="submit" value="Login"></p>
-        </form>
-        <!--CONTENT ENDS HERE-->
+        <!-- CONTENT STARTS HERE-->
+        <h2>FAQS (Frequently Asked Questions)</h2>
+        <hr />
+        <ol>
+          <li>
+            <h4 style="font-weight: bold;">What is BuDb?</h4>
+            BuDb is a database system designed to alleviate the tiring process involved in Buruli ulcer drug discovery by providing end-users with essential biological data on M. ulcerans.
+          </li>
+
+          <li>
+            <h4 style="font-weight: bold;">Importance of BuDb</h4>
+            <ul>
+              <li>Serve as a repository for Buruli ulcer data to enhance easy retrievals.</li>
+              <li>Provide information relevant for Buruli ulcer drug discovery research.</li>
+              <li>Accelerate drug discovery processes for Buruli ulcer by reducing the time allocated for the traditional way of data curation and mining processes.</li>
+            </ul>
+          </li>
+
+          <li>
+            <h4 style="font-weight: bold;">How does BuDb work?</h4>
+            The enhanced user query interface including both “Search Specified Group…” and “Search all Groups…” textboxes enable users to perform the following actions:
+            <ul>
+              <li>Biological data (drug target, tested compounds, existing drugs, ethnopharmacological plants, genome) entry</li>
+              <li>Simply click on the search icon or enter on the keyboard to query for biological data</li>
+              <li>Detailed results of biological data will be displayed</li>
+            </ul>
+          </li>
+
+          <li>
+            <h4 style="font-weight: bold;">Will there be any future updates or modifications to BuDb?</h4>
+            Yes, there will be regular updates to the BuDb database with up-to-date biological data on M. ulcerans.
+          </li>
+
+          <li>
+            <h4 style="font-weight: bold;">Are there any limitations with BuDb?</h4>
+            Yes, BuDb database contains incomplete information on some selected data sets.
+          </li>
+
+          <li>
+            <h4 style="font-weight: bold;">Can I download detailed information on biological data on M. ulcerans from BuDb?</h4>
+            The feature to allow the download of detailed information will be implemented soon.
+          </li>
+
+          <li>
+            <h4 style="font-weight: bold;">Where can I send any other questions or my complaints?</h4>
+            Please send any question or complaint via <a href="mailto:dtanyimadu@gmail.com">Email</a>.
+          </li>
+
+        </ol>
+        
+        <br><br>
+
+        <!-- CONTENT ENDS HERE-->
       </div>
     </section>
     
     <footer class="u-align-center u-clearfix u-footer u-grey-80 u-footer" id="sec-9dbd"><div class="u-clearfix u-sheet u-sheet-1">
         <p class="u-small-text u-text u-text-variant u-text-1" spellcheck="false"> Please contact <b>BUDb</b>&nbsp;through <a href="mailto:dtanyimadu@gmail.com?subject=Hello" class="u-active-none u-border-none u-btn u-button-link u-button-style u-hover-none u-none u-text-palette-1-base u-btn-1">email</a>&nbsp;to add to our database
-          other vital information that will help accelerate the development of novel
-          drug(s) for the treatment of <b>Buruli ulcer</b>.
+other vital information that will help accelerate the development of novel
+drug(s) for the treatment of <b>Buruli
+ulcer</b>.
         </p>
       </div></footer>
   </body>
