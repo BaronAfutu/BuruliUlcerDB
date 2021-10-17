@@ -113,7 +113,6 @@ router.get('/any/results',async (req,res)=>{
   }
 })
 
-
 router.post('/addEntry/:group', (req,res)=>{
   //console.log(req.params.group)
   if(!req.params.group){res.render('error',{title: "Error Page"})}
