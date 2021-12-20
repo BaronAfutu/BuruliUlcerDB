@@ -1,9 +1,11 @@
 var express = require('express');
-var dbConnect = require('../bin/db');
+var dbConnect = require('../config/db');
 var syncSql = require('sync-sql');
-var config = require('../bin/dbConfig.json');
+var config = require('../config/dbConfig.json');
+const {body,query,param,validationResult} = require('express-validator');
+
 var router = express.Router();
-require('dotenv').config({ path: './.env' });
+//require('dotenv').config({ path: './.env' }); //Is present in db.js as well
 
 if(process.env.ENV){
   config = {
@@ -22,40 +24,83 @@ router.get('/', function(req, res) {
 
 
 
-
+router.use(
+  '/any/results',
+  query('search_val','Minimum search text length: 2').trim().isLength({min:3}).escape(),
+  (req,res,next)=>{
+  const errors = validationResult(req);
+  if(!errors.isEmpty()){
+    //console.error(errors);
+    res.render('error',{'title':'Error','errMsg':errors.errors[0].msg});
+  }
+  else{
+    next();
+  }
+});//Input validation
 router.get('/any/results',async (req,res)=>{
   let search_val = req.query.search_val;
   var retrivedResults = [];
-  
-  let cndtn1 = "id LIKE '%"+search_val+"%' OR drug_target LIKE '%"+search_val+"%' OR genes LIKE '%"+search_val+"%' OR amp LIKE '%"+search_val+"%' OR functions LIKE '%"+search_val+"%' OR uniport_id LIKE '%"+search_val+"%' OR reference LIKE '%"+search_val+"%' OR links LIKE '%"+search_val+"%'";
-  let cndtn2 = "id LIKE '%"+search_val+"%' OR species LIKE '%"+search_val+"%' OR family LIKE '%"+search_val+"%' OR country LIKE '%"+search_val+"%' OR part LIKE '%"+search_val+"%' OR extraction LIKE '%"+search_val+"%' OR solvents LIKE '%"+search_val+"%' OR metabolites LIKE '%"+search_val+"%' OR antimicro_mthds LIKE '%"+search_val+"%' OR activity LIKE '%"+search_val+"%' OR liver_cell LIKE '%"+search_val+"%' OR reference LIKE '%"+search_val+"%' OR links LIKE '%"+search_val+"%'";
-  let cndtn3 = "id LIKE '%"+search_val+"%' OR mycobacterium LIKE '%"+search_val+"%' OR exist_database LIKE '%"+search_val+"%' OR gene_info LIKE '%"+search_val+"%' OR pro_gene_stats LIKE '%"+search_val+"%' OR accession LIKE '%"+search_val+"%' OR source LIKE '%"+search_val+"%' OR reference LIKE '%"+search_val+"%' OR ncbi LIKE '%"+search_val+"%' OR links LIKE '%"+search_val+"%' OR article LIKE '%"+search_val+"%' OR genome_link LIKE '%"+search_val+"%'";
-  let cndtn4 = "id LIKE '%"+search_val+"%' OR test_compound LIKE '%"+search_val+"%' OR mic LIKE '%"+search_val+"%' OR ic50 LIKE '%"+search_val+"%' OR technique LIKE '%"+search_val+"%' OR structure LIKE '%"+search_val+"%' OR m_weight LIKE '%"+search_val+"%' OR drug_target LIKE '%"+search_val+"%' OR properties LIKE '%"+search_val+"%' OR cid LIKE '%"+search_val+"%' OR drug_bank_id LIKE '%"+search_val+"%' OR reference LIKE '%"+search_val+"%'";
-  let cndtn5 = "id LIKE '%"+search_val+"%' OR drugs LIKE '%"+search_val+"%' OR class LIKE '%"+search_val+"%' OR targets LIKE '%"+search_val+"%' OR mechanism LIKE '%"+search_val+"%' OR pharmacodynamics LIKE '%"+search_val+"%' OR mode LIKE '%"+search_val+"%' OR inhibitors LIKE '%"+search_val+"%' OR drug_bank_id LIKE '%"+search_val+"%' OR links LIKE '%"+search_val+"%' OR reference LIKE '%"+search_val+"%' OR reference_links LIKE '%"+search_val+"%'";
 
-  /*let queries = {
-    drug_target : "SELECT id,drug_target from drug_target where drug_target LIKE '%" + search_val + "%' ",
-    ethnopharmacological : "SELECT id,species from ethnopharmacological where species LIKE '%" + search_val + "%' ",
-    genome : "SELECT id,mycobacterium from genome where mycobacterium LIKE '%" + search_val + "%' ",
-    test_compounds : "SELECT id,test_compound from test_compounds where test_compound LIKE '%" + search_val + "%' ",
-    existing_drugs : "SELECT id,drugs from existing_drugs where drugs LIKE '%" + search_val + "%' "
-  };*/
+  // getting table fields. 
+  // Changes to the DB fields will not affect the code unless table names are changed
+  let results = [];
+  let qryCond = "";
+  let qryConds = [];
+  //let tableNames = ["drug_target","ethnopharmacological","existing_drugs","genome","test_compounds"];
+  let fieldNames = [];
+  let tempFNarray = [];
+
+  try {
+    results.push(syncSql.mysql(config,"SELECT * from drug_target LIMIT 1").data.fields);
+    results.push(syncSql.mysql(config,"SELECT * from ethnopharmacological LIMIT 1").data.fields);
+    results.push(syncSql.mysql(config,"SELECT * from existing_drugs LIMIT 1").data.fields);
+    results.push(syncSql.mysql(config,"SELECT * from genome LIMIT 1").data.fields);
+    results.push(syncSql.mysql(config,"SELECT * from test_compounds LIMIT 1").data.fields);
+  } catch (error) {
+    console.error(error);
+    return res.render('error',{'title':'Error','errMsg':'Error encountered while performing the search.'});
+  }
+
+  //creating the search queries
+  for(let table of results){
+    qryCond = "";
+    tempFNarray = ['id'];
+    for(let fields of table){
+      if(fields.type==3)continue; //will exclude fields of type int from the search
+      qryCond+=" "+fields.name+" LIKE '%"+search_val+"%' OR";
+      tempFNarray.push(fields.name);
+    }
+    qryConds.push(qryCond.substring(0,qryCond.length-2));
+    fieldNames.push(tempFNarray);
+  }
+
+
   let queries = {
-    drug_target : "SELECT id,drug_target,functions from drug_target where ("+cndtn1+")",
-    ethnopharmacological : "SELECT id,species,solvents,metabolites from ethnopharmacological where ("+cndtn2+")",
-    genome : "SELECT id,mycobacterium,gene_info,pro_gene_stats from genome where ("+cndtn3+")",
-    test_compounds : "SELECT id,test_compound,properties,drug_target from test_compounds where ("+cndtn4+")",
-    existing_drugs : "SELECT id,drugs,mechanism,pharmacodynamics from existing_drugs where ("+cndtn5+")"
+    drug_target : `SELECT * from drug_target where (${qryConds[0]})`,
+    ethnopharmacological : `SELECT * from ethnopharmacological where (${qryConds[1]})`,
+    existing_drugs : `SELECT * from existing_drugs where (${qryConds[2]})`,
+    genome : `SELECT * from genome where (${qryConds[3]})`,
+    test_compounds : `SELECT * from test_compounds where (${qryConds[4]})`
   };
 
   for(qry in queries){
-    let output = syncSql.mysql(config,queries[qry]);
+    let output = [];
+    try {
+      output = syncSql.mysql(config,queries[qry]);
+    } catch (error) {
+      console.error(error);
+      return res.render('error',{'title':'Error','errMsg':'Error encountered while performing the search.'});
+    }
     let error = output.success==false;
+    //console.log(output.data.rows);
     let results = output.data.rows;
     let fields = output.data.fields;
-    
-    if(error)res.render('error');
-    let resSize = results.length;
+    //return res.json({});
+    if(error){
+      console.error(error);
+      return res.render('error',{'title':'Error','errMsg':'Error encountered while performing the search.'});
+    }
+      let resSize = results.length;
 
     if(resSize>0){
 
@@ -63,7 +108,7 @@ router.get('/any/results',async (req,res)=>{
       for(let i=0;i<resSize;i++){
         searchHit = "";
         for(x in results[i]){
-          if(x=="id"){
+          if( !isNaN(parseInt(results[i][x])) || results[i][x]==null){//if the field is a number
             continue;
           }
           let searchIndex = results[i][x].indexOf(search_val);
@@ -113,9 +158,22 @@ router.get('/any/results',async (req,res)=>{
   }
 })
 
-router.post('/addEntry/:group', (req,res)=>{
+/*
+router.use('/addEntry/:group',
+params('group','404 - Page not found!!').isIn(["drug_target","ethnopharmacological","existing_drugs","genome","test_compounds"]),
+  (req,res,next)=>{
+  const errors = validationResult(req);
+  if(!errors.isEmpty()){
+    console.error(error);
+    return res.render('error',{'title':'Error','errMsg':'Error encountered while performing the search.'});
+  }
+  else{
+    next();
+  }
+});//Input validation
+router.post('/addEntry/:group', (req,res)=>{//should go to admin section
   //console.log(req.params.group)
-  if(!req.params.group){res.render('error',{title: "Error Page"})}
+  if(!req.params.group){return res.render('error',{title: "Error Page"})}
   let i=0;
   let addData = [];
   let addDataStr = "";
@@ -140,9 +198,22 @@ router.post('/addEntry/:group', (req,res)=>{
     res.render()
   });
   //console.log(addDataStr);
-})
+});
+*/
 
-//have to sanitize inputs here too
+router.use('/results/:group/:id',
+  param('group','404 - Page not found!!').isIn(["drug_target","ethnopharmacological","existing_drugs","genome","test_compounds"]),
+  param('id').isNumeric().trim().escape(),
+  (req,res,next)=>{
+  const errors = validationResult(req);
+  if(!errors.isEmpty()){
+    console.error(errors);
+    return res.render('error',{'title':'Error','errMsg':errors.errors[0].msg});
+  }
+  else{
+    next();
+  }
+});//Input validation
 router.get('/results/:group/:id',(req,res)=>{
   let group = req.params.group;
   let id = req.params.id;
@@ -174,18 +245,19 @@ router.get('/results/:group/:id',(req,res)=>{
   });
 });
 
-
-//Middleware for search values
-//Sanitization will occur here
-router.use('/results',(req,res,next)=>{
-  try {
-    let {search_val,group} = req.query;
-    if(!group || search_val=='')return res.render('error');
+router.use('/results',
+  query('group','404 - Page not found!!').isIn(["drug_target","ethnopharmacological","existing_drugs","genome","test_compounds"]),
+  query('search_val','Minimum search text length: 2').trim().isLength({min:3}).escape(),
+  (req,res,next)=>{
+  const errors = validationResult(req);
+  if(!errors.isEmpty()){
+    console.error(errors);
+    return res.render('error',{'title':'Error','errMsg':errors.errors[0].msg});
   }
-  catch(err) {return res.render('error');}
-  next();
-})
-
+  else{
+    next();
+  }
+});//Input validation
 //Deep Fetching results
 router.get('/results',(req,res)=>{
   //let cont = true;
@@ -207,11 +279,11 @@ router.get('/results',(req,res)=>{
   let results = output.data.rows;
   let fields = output.data.fields;
 
-  if(error)res.render('error');
+  if(error)return res.render('error');
   for(x in results[0]){
     qryCond+=" "+x+" LIKE '%"+search_val+"%' OR";
   }
-  qryCond = qryCond.substr(0,qryCond.length-2);
+  qryCond = qryCond.substring(0,qryCond.length-2);
   //console.log(qryCond);
 
 
@@ -248,7 +320,7 @@ router.get('/results',(req,res)=>{
       for(let i=0;i<resSize;i++){
         searchHit = "";
         for(x in results[i]){
-          if(x=="id"){
+          if( !isNaN(parseInt(results[i][x])) || results[i][x]==null){//if the field is a number
             continue;
           }
           let searchIndex = results[i][x].indexOf(search_val);
@@ -256,6 +328,8 @@ router.get('/results',(req,res)=>{
             searchHit = "..."+ results[i][x].substring(searchIndex-40,searchIndex+search_val.length+40);
           }
         }
+        if(searchHit=="")searchHit="found within detailed information";
+
         retrived[i] = {
           id : results[i]['id'],
           resName : results[i][fields[1].name],
@@ -275,7 +349,18 @@ router.get('/results',(req,res)=>{
 });
 
 
-
+router.use('/browse/:group',
+  param('group','404 - Page not found!!').isIn(["drug_target","ethnopharmacological","existing_drugs","genome","test_compounds"]),
+  (req,res,next)=>{
+  const errors = validationResult(req);
+  if(!errors.isEmpty()){
+    console.error(errors);
+    return res.render('error',{'title':'Error','errMsg':errors.errors[0].msg});
+  }
+  else{
+    next();
+  }
+});//Input validation
 router.get('/browse/:group',(req,res)=>{
   let group = req.params.group;
   let groupMatch={
@@ -287,47 +372,36 @@ router.get('/browse/:group',(req,res)=>{
   }
 
   let queries = {
-    "drug_target": "SELECT id,drug_target,genes,functions,uniport_id,links from " + group,
-    "ethnopharmacological": "SELECT id,species,country,part,extraction,links from " + group,
-    "genome": "SELECT id,exist_database,mycobacterium,pro_gene_stats,genome_link from " + group,
-    "test_compounds": "SELECT id,test_compound,technique,cid,drug_bank_id,reference from " + group,
-    "existing_drugs": "SELECT id,drugs,targets,mode,drug_bank_id,reference_links from " + group
+    "drug_target": "SELECT id,drug_target,organism,gene_name,amp,function from " + group,
+    "ethnopharmacological": "SELECT id,species,family,country,part,metabolites from " + group,
+    "genome": "SELECT id,organism_name,organism_grp,subspecies_name,pro_coding,taxonomy from " + group,
+    "test_compounds": "SELECT id,test_compound,mic,experimental,structure_2d,cid from " + group,
+    "existing_drugs": "SELECT id,drugs,class,target,mechanism,mode from " + group
   }
 
   let headers={
-    "drug_target": ["Drug Target","Genes","Function","Uniprot ID","Links to Reference Manager"],
-    "ethnopharmacological": ["Species","Country of Collection","Part Used","Extraction Method","External Links"],
-    "genome": ["Existing Database", "Name of Mycobacterium","Protein and Gene Stats","Genome Link"],
-    "test_compounds": ["Tested Compounds","Experimental Technique","PubChem ID","Drug Bank ID","Reference"],
-    "existing_drugs": ["Existing Drugs","Drug Target","Mode of Administration","Drug Bank ID","Links to Reference Manager"]
+    "drug_target": ["Potential Drug Target","Organism","Gene Name","Associated Metabolic Pathways","Function"],
+    "ethnopharmacological": ["Species","Family","Country of Collection","Part Used","Secondary Metabolites/Photochemical Composition"],
+    "genome": ["Organism Name", "Organism Group","Sub-species Class. Strain Name","CDS","Taxonomy"],
+    "test_compounds": ["Tested Compounds","MIC","Experimental Technique","2D structure","PubChem CID"],
+    "existing_drugs": ["Experimental Drugs","Class","Target Protein","Mechanism of Action","Mode of Administration"]
   }
   //let qry = "SELECT * from " + group;
 
   dbConnect.query(queries[group],function(err,results,fields){
     if(err)throw err;
-    //console.log(results);
 
     let resSize = results.length;
-    if(resSize==0){
-      //no results found
-      res.status(200);
-      return res.render('noResults',{
-        title : 'Not Found - BUDB',
-        sv : search_val
-      });
-    }
-    else{
-      //Table retrieved
-      res.status(200);
-      return res.render('browse',{
-        title : groupMatch[group]+' - BUDB',
-        group : group,
-        groupDisplay: groupMatch[group],
-        results : results,
-        resultsSize : resSize,
-        headers: headers[group]
-      });
-    }
+
+    res.status(200);
+    return res.render('browse',{
+      title : groupMatch[group]+' - BUDB',
+      group : group,
+      groupDisplay: groupMatch[group],
+      results : results,
+      resultsSize : resSize,
+      headers: headers[group]
+    });
   });
 });
 

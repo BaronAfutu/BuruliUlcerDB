@@ -8,9 +8,12 @@
     <meta name="page_type" content="np-template-header-footer-from-plugin">
     <title><%= title %></title>
     <link rel="stylesheet" href="/stylesheets/nicepage.css" media="screen">
-<link rel="stylesheet" href="/stylesheets/Page-1.css" media="screen">
+    <link rel="stylesheet" href="/stylesheets/Page-1.css" media="screen">
+    <link rel="stylesheet" href="/stylesheets/jquery.dataTables.min.css" media="screen">
     <script class="u-script" type="text/javascript" src="/javascripts/jquery-1.9.1.min.js" defer=""></script>
+    <script class="u-script" type="text/javascript" src="/javascripts/jquery.dataTables.min.js" defer=""></script>
     <script class="u-script" type="text/javascript" src="/javascripts/nicepage.js" defer=""></script>
+    <script class="u-script" type="text/javascript" src="/javascripts/browsePage.js" defer=""></script>
     <meta name="generator" content="Nicepage 3.22.0, nicepage.com">
     <link id="u-theme-google-font" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i|Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i">
     
@@ -58,21 +61,43 @@
 
         <h2><%= groupDisplay %></h2>
         <% let makeLink = false; %>
-
-        <table style="width: 100%; border: 1px solid black;">
-          <tr>
-            <%  for(i of headers){ %>
-              <th style="border: 1px solid black;"><%= i %></th>
-            <% } %>
-          </tr>
+        
+        <table style="width: 100%; border: 1px solid black;" id="browseTable"  class="display">
+          <thead>
+            <tr>
+              <%  for(i of headers){ %>
+                <th style="border: 1px solid black;"><%= i %></th>
+              <% } %>
+            </tr>
+          </thead>
+          <tbody>
           <% for(let i=0;i< resultsSize;i++){ %>
 
             <tr name="rowData">
               <% for(x in results[i]){ %>
+                <%if(x==="uniport_id"){ %>
+                  <td name="textEntry" style="border: 1px solid black; padding: 5px;">
+                    <a href="https://www.uniprot.org/uniprot/<%= results[i][x] %>" target="_blank">
+                      <%= results[i][x] %>
+                    </a>
+                  </td>
+                <% continue;} %>
+                <%if(x==="structure_2d"){ %>
+                  <td name="textEntry" style="border: 1px solid black; padding: 5px;">
+                    <img src="/images/testCompound2d/<%= results[i][x] %>" alt="2D Structure of <%= results[i]['test_compound'] %>" width="50%"/>
+                  </td>
+                <% continue;} %>
+                <%if(x==="drug_bank_id"){ %>
+                  <td name="textEntry" style="border: 1px solid black; padding: 5px;">
+                    <a href="https://go.drugbank.com/drugs/<%= results[i][x] %>" target="_blank">
+                      <%= results[i][x] %>
+                    </a>
+                  </td>
+                <% continue;} %>
                 <% if(x==="id"){ makeLink=true; continue; } //Skip ID field %>
                 
                 <% if(results[i][x]==="nan"){ %>
-                  <td name="textEntry" style="border: 1px solid black; padding: 5px;">N/A</td>
+                  <td name="textEntry" style="border: 1px solid black; padding: 5px;"></td>
                 <% } else { %>
 
                   <% if(makeLink==true){ %>
@@ -80,6 +105,7 @@
                       <a href="/results/<%= group %>/<%= results[i]['id'] %>"> <%= results[i][x] %></a>
                     </td>
                   <% makeLink=false; } else { %>
+
                     <td name="textEntry" style="border: 1px solid black; padding: 5px;"><%= results[i][x] %></td>
                   <% } %>
 
@@ -87,14 +113,15 @@
               <% } %>
               </tr>
           <% } %>
+        </tbody>
         </table>
 
         <br>
-        <div>
+        <!--div>
            <span id="prevBtn" style="font-size: 24px;cursor: pointer;">&leftarrow;</span>Prev
            <input style="width: 40px; text-align: center;" type="number" name="pgNumber" id="pgNumber" value="1" max="10" min="1" readonly>
            Next<span id="nxtBtn" style="font-size: 24px;cursor: pointer;">&rightarrow;</span>  
-        </div>
+        </div-->
         
       </div>
     </section>
@@ -106,6 +133,5 @@ drug(s) for the treatment of <b>Buruli
 ulcer</b>.
         </p>
       </div></footer>
-      <script src="/javascripts/browsePage.js"></script>
   </body>
 </html>

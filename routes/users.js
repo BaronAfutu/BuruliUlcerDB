@@ -3,7 +3,7 @@ var router = express.Router();
 //var dbConnect = require('../bin/db');
 var crypto = require('crypto');
 var syncSql = require('sync-sql');
-var config = require('../bin/dbConfig.json');
+var config = require('../config/dbConfig.json');
 var session;
 
 

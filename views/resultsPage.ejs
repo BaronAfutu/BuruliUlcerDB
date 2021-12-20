@@ -59,72 +59,87 @@
         <!--CONTENT COMES HERE-->
         
         <% sub = {
-          drug_target : 'DRUG TARGET',
-          genes : 'GENES',
+          drug_target : 'POTENTIAL DRUG TARGET',
+          organism : 'ORGANISM',
+          gene_name : 'GENE NAME',
+          protein_length: 'PROTEIN LENGTH',
           amp : 'ASSOCIATED METABOLIC PATHWAYS',
-          functions : 'FUNCTION',
+          function : 'FUNCTION',
           uniport_id : 'UNIPROT ID',
+          string: 'STRING',
+          kegg_pathway: 'KEGG PATHWAY',
+          go_mole_func: 'GO -  MOLECULAR FUNCTION',
+          go_bio_process: 'GO - BIOLOGICAL PROCESS',
+          pubmed_link: 'LINK TO PUBMED',
           reference : 'REFERENCE',
-          links : 'EXTERNAL LINKS',
           species : 'SPECIES', 
           family : 'FAMILY', 
-          country : 'COUNTRY OF COLLECTION', 
+          country : 'COUNTRY OF COLLECTION',
+          local_name: 'COMMON /LOCAL NAMES', 
           part : 'PART USED', 
           extraction : 'EXTRACTION METHOD', 
           solvents : 'SOLVENT(S) USED', 
-          metabolites : 'SECONDARY METABOLITES',
+          metabolites : 'SECONDARY METABOLITES / PHYTOCHEMICAL COMPOSITION',
           antimicro_mthds : 'ANTIMICROBIAL  ASSAY METHODS',
-          activity : 'ACTIVITY/MIC (µg/ml)', 
-          liver_cell : 'CC50 (µg/ml) Chang Liver Cell', 
-          exist_database : 'EXISITNG DATABASE', 
-          mycobacterium : 'NAME OF MYCOBACTERIUM', 
-          gene_info : 'GENETIC INFORMATION/ SIZE (bp)', 
-          pro_gene_stats : 'PROTEIN AND GENE STATS', 
-          accession : 'ACCESSION NUMBER / LOCUS', 
-          source : 'DATA SOURCE',
-          ncbi : 'NCBI LINK / DATA SOURCE',
-          article : 'NAME OF ARTICLE', 
-          genome_link : 'COMPLETE GENOME LINK+O1',
+          fomulation_and_mode: 'FORMULATION AND MODE OF USAGE (in-vivo only)',
+          activity : 'ACTIVITY/MIC (µg/ml)',
+          plant_db_links: 'LINKS TO PLANT DATABASES',
+          liver_cell : 'CC50 (µg/ml) Chang Liver Cell',
           test_compound : 'TESTED COMPOUNDS',
-          mic : 'MIC', 
-          ic50 : 'IC50', 
-          technique : 'EXPERIMENTAL TECHNIQUE', 
+          mic : 'MIC',
+          experimental : 'EXPERIMENTAL TECHNIQUE', 
           structure : 'STRUCTURE',
           m_weight : 'MOLECULAR WEIGHT',
           properties : 'OTHER PROPERTIES',
           cid : 'PUBCHEM ID',
           drug_bank_id : 'DRUG BANK ID', 
-          drugs : 'EXISTING / POSSIBLE DRUGS',
+          organism_name : 'ORGANISM NAME',
+          genome_id : 'GENOME ASSEMBLY ID',
+          organism_grp : 'ORGANISM GROUPS',
+          subspecies_name : 'STRAIN NAME OF SUB-SPECIES CLASSIFICATION',
+          bio_id : 'ID OF BIOLOGICAL SAMPLE IN THE BIOSAMPLE DATABASE (BIOSAMPLE)',
+          bioproject : 'BIOPROJECT',
+          gen_asmb_id : 'IDENTIFIER FOR THE GENOME ASSEMBLY',
+          asmb_level : 'ASSEMBLY LEVEL',
+          gen_asmb_len : 'LENGTH OF GENOME ASSEMBLY (Mb)',
+          gc : 'GC%',
+          gen_shotgun : 'PREFIX FOR WHOLE GENOME SHOTGUN',
+          scaf_num : 'NUMBER OF SCAFFOLDS',
+          pro_coding : 'PROTEIN CODING GENES (CDS)',
+          release_date : 'RELEASE DATE',
+          taxonomy : 'TAXONOMY',
+          biocyc : 'BioCYc',
+          uniport_prot : 'UNIPROT PROTEOME',
+          kegg_gen : 'KEGG GENOME',
+          drugs : 'EXPERIMENTAL DRUGS / POTENTIAL ANTIBIOTIC THERAPIES AGAINST M. ULCERANS',
           class : 'CLASS',
-          targets : 'DRUG TARGETS',
+          target : 'TARGET PROTEIN',
           mechanism : 'MECHANISM OF ACTION',
+          similar_targets: 'SIMILAR TARGETS IN OTHER SPECIES',
           pharmacodynamics : 'PHARMACODYNAMICS',
           mode : 'MODE OF ADMINISTRATION',
           inhibitors : 'KNOWN INHIBITOR (S)',
-          reference_links : 'LINKS FOR REFERENCE MANAGER'
-      } %>
+          external_links : 'EXTERNAL LINKS',
+          molecular_formula: 'MOLECULAR FORMULA',
+          structure_2d: '2D STRUCTURE',
+          reference_links : 'LINK TO REFERENCE'
+        } %>
       
-          <h1 class="subTitle"><%= resName%></h1>
+          <h1 class="subTitle"><%= resName%></h1><!--Name of record / result-->
+
           <% for(x in result){ %>
               <% if(x==="id"){ continue; } //Skip ID field %>
-              <p class="subHead"> <%= sub[x] %> </p>
+              <% if(result[x]=="nan" || result[x]=="" || result[x]==null){ continue; } //Skip empty fields %>
+              
+              <p class="subHead"> <%= sub[x] %> </p><!--Field Header-->
       
-              <% if(result[x]==="nan"){ %>
-                  <pre  class="content" name="content">N/A</pre>
-              <% } else if(x==="links"){ %>
-                  <pre  class="content" name="content"><%= result[x] %></pre>
-              <% } else if(x==="genes"){ %>
+              <% if(x==="gene_name"){ %>
                   <pre style="font-style:italic;"  class="content" name="content"><%= result[x] %></pre>
-                <% } else if(x==="drug_bank_id"){ %>
-                  <a href="https://go.drugbank.com/drugs/<%= result[x] %>" target="_blank">
-                      <pre><%= result[x] %></pre>
-                  </a>
-              <% } else if(x==="uniport_id"){ %>
-                  <a href="https://www.uniprot.org/uniprot/<%= result[x] %>" target="_blank">
-                      <pre><%= result[x] %></pre>
-                  </a>
+              <% } else if(x==='structure_2d'){ %>
+                <img src="/images/testCompound2d/<%= result[x] %>" alt="2D Structure of <%= result['test_compound'] %>"/>
+              
               <% } else { %>
-                  <pre  class="content" name="content"><%- result[x]%></pre>
+              <pre  class="content" name="content" id="<%= x %>"><%- result[x]%></pre>
               <% } %>
               <hr>
           <% } %>

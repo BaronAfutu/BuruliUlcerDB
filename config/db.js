@@ -1,6 +1,6 @@
 var mysql = require('mysql');
-var config = require('./dbConfig.json')
-require('dotenv').config({ path: './.env' });
+var config = require('./dbConfig.json');
+//require('dotenv').config({ path: './.env' }); //Is present in index.js as well
 
 if(process.env.ENV){
   config = {
